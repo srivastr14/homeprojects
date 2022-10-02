@@ -1,10 +1,11 @@
+from tkinter import X
 import pip._vendor.requests as requests
 import json
 from datetime import datetime, time
 import time
 
-today = datetime.today().strftime('%Y%m%d')
-# today = '20221001'
+# today = datetime.today().strftime('%Y%m%d')
+today = '20221001'
 
 def scoreboard():
     while True:
@@ -26,11 +27,30 @@ def scoreboard():
             hscore = game['competitions'][0]['competitors'][0]['score'] 
             status = game['status']['type']['detail']
             if game['status']['type']['description'] == "Scheduled":
-                print(f'{teams} | {status}')
+                # print(f'{teams} | {status}')
                 continue
-            print(f'{teams} | {ascore}-{hscore} | {status}')
+            elif game['status']['type']['description'] == "Final": 
+                # print(f'{teams} | {ascore}-{hscore} | {status}')
+                continue
+            try:
+                print(f'{teams} | {ascore}-{hscore} | {status}', end=" ") 
+                print("|", game['competitions'][0]['situation']['downDistanceText'])
+                t_id = game['competitions'][0]['situation']['possession'] 
+                if game['competitions'][0]['competitors'][0]['id'] == game['competitions'][0]['situation']['possession']:
+                    print(game['competitions'][0]['competitors'][0]['team']['location'])
+                    print(f"{teams} | {ascore}-{hscore} | {status} | ", end=" ")
+                    print("|", game['competitions'][0]['situation']['downDistanceText'], game['competitions'][0]['competitors'][0]['team']['location'])
+                elif game['competitions'][0]['competitors'][1]['id'] == game['competitions'][0]['situation']['possession']:
+                    print(game['competitions'][0]['competitors'][1]['team']['location'])
+                    print(f"{teams} | {ascore}-{hscore} | {status} | ", end=" ")
+                    print("|", game['competitions'][0]['situation']['downDistanceText'], game['competitions'][0]['competitors'][1]['team']['location'])
+                # Let's see if I can find possession team, id in game['competitions'][0]['situation']['possession'] 
+                # print(f'{teams} | {ascore}-{hscore} | {status} | {play}')
+            except KeyError:
+                print("still not working")
+                print(f'{teams} | {ascore}-{hscore} | {status}') 
         print('\n')
-        time.sleep(10)
+        time.sleep(5)
 
 if __name__ == '__main__':
     scoreboard()
