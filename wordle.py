@@ -39,22 +39,22 @@ def testguess(guesslet, corrlet, board):
                 for k in range(0, 5):
                     if guesslet[k] == corrlet[k] and i <= k:
                         print("and here")
-                        for x in range(0,5):
-                            if counterg[guesslet[k]] > guessy.count(guesslet[i]) and guesslet[x] == corrlet[x]:
-                                clue += "-"
-                                break
-                                for b in range(0,5):
-                                    if counterc[guesslet[i]] <= guessy.count(guesslet[i]):
+                        # for x in range(0,5):
+                        #     if counterg[guesslet[k]] > guessy.count(guesslet[i]) and guesslet[x] == corrlet[x]:
+                        #         clue += "-"
+                        #         break
+                        #         for b in range(0,5):
+                        #             if counterc[guesslet[i]] <= guessy.count(guesslet[i]):
 
-                            # clue += "-"
-                            break
-                        else:
-                            clue += "Y"
-                            break
-                        break
-                    elif guesslet[k] == corrlet[k] and i > k:
-                        clue += "-"
-                        break
+                        #     # clue += "-"
+                        #     break
+                    #     else:
+                    #         clue += "Y"
+                    #         break
+                    #     break
+                    # elif guesslet[k] == corrlet[k] and i > k:
+                    #     clue += "-"
+                    #     break
                     # elif guesslet[k] == corrlet[k] and i == k:
                     #     clue += "Y"
                     #     break
