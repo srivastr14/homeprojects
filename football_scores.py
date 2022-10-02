@@ -11,7 +11,15 @@ def scoreboard():
         league = input("Which league do you want? NFL/college: ")
         if league in ['nfl', 'college']:
             break
-    headers = {'content-type': 'multipart/form-data'}
+    headers = {
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+    'Accept-Encoding': 'gzip, deflate',
+    'Accept-Language': 'en-US,en;q=0.5',
+    'Connection': 'keep-alive',
+    'Host': 'site.api.espn.com',
+    'Upgrade-Insecure-Requests': '1',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:105.0) Gecko/20100101 Firefox/105.0',
+    }
     if league == 'college':
         urlline = f'https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?dates={today}&limit=200'
     elif league == 'nfl':
