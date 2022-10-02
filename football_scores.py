@@ -1,11 +1,10 @@
-from tkinter import X
 import pip._vendor.requests as requests
 import json
 from datetime import datetime, time
 import time
 
-# today = datetime.today().strftime('%Y%m%d')
-today = '20221001'
+today = datetime.today().strftime('%Y%m%d')
+# today = '20221001'
 
 def scoreboard():
     while True:
@@ -19,6 +18,10 @@ def scoreboard():
         urlline = f'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard'
     
     while True:
+        choice = input("Which games do you want? all/live: ")
+        if choice in ['all', 'live']:
+            break
+    while choice=='live':
         response = requests.request("GET", urlline, headers=headers)
         jsondata = json.loads(response.text)
         for game in jsondata['events']:
@@ -27,30 +30,43 @@ def scoreboard():
             hscore = game['competitions'][0]['competitors'][0]['score'] 
             status = game['status']['type']['detail']
             if game['status']['type']['description'] == "Scheduled":
-                # print(f'{teams} | {status}')
                 continue
             elif game['status']['type']['description'] == "Final": 
-                # print(f'{teams} | {ascore}-{hscore} | {status}')
                 continue
             try:
-                print(f'{teams} | {ascore}-{hscore} | {status}', end=" ") 
-                print("|", game['competitions'][0]['situation']['downDistanceText'])
-                t_id = game['competitions'][0]['situation']['possession'] 
                 if game['competitions'][0]['competitors'][0]['id'] == game['competitions'][0]['situation']['possession']:
-                    print(game['competitions'][0]['competitors'][0]['team']['location'])
-                    print(f"{teams} | {ascore}-{hscore} | {status} | ", end=" ")
-                    print("|", game['competitions'][0]['situation']['downDistanceText'], game['competitions'][0]['competitors'][0]['team']['location'])
+                    print(f"{teams} | {ascore}-{hscore} | {status} |", end=" ")
+                    print(f"{game['competitions'][0]['situation']['downDistanceText']}, {game['competitions'][0]['competitors'][0]['team']['location']} ball")
                 elif game['competitions'][0]['competitors'][1]['id'] == game['competitions'][0]['situation']['possession']:
-                    print(game['competitions'][0]['competitors'][1]['team']['location'])
-                    print(f"{teams} | {ascore}-{hscore} | {status} | ", end=" ")
-                    print("|", game['competitions'][0]['situation']['downDistanceText'], game['competitions'][0]['competitors'][1]['team']['location'])
-                # Let's see if I can find possession team, id in game['competitions'][0]['situation']['possession'] 
-                # print(f'{teams} | {ascore}-{hscore} | {status} | {play}')
+                    print(f"{teams} | {ascore}-{hscore} | {status} |", end=" ")
+                    print(f"{game['competitions'][0]['situation']['downDistanceText']}, {game['competitions'][0]['competitors'][1]['team']['location']} ball")
             except KeyError:
-                print("still not working")
-                print(f'{teams} | {ascore}-{hscore} | {status}') 
+                print(f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['lastPlay']['text']}") 
         print('\n')
         time.sleep(5)
+    if choice == 'all':
+        response = requests.request("GET", urlline, headers=headers)
+        jsondata = json.loads(response.text)
+        for game in jsondata['events']:
+            teams = game['name']
+            ascore = game['competitions'][0]['competitors'][1]['score']
+            hscore = game['competitions'][0]['competitors'][0]['score'] 
+            status = game['status']['type']['detail']
+            if game['status']['type']['description'] == "Scheduled":
+                print(f'{teams} | {status}')
+                continue
+            elif game['status']['type']['description'] == "Final": 
+                print(f'{teams} | {ascore}-{hscore} | {status}')
+                continue
+            try:
+                if game['competitions'][0]['competitors'][0]['id'] == game['competitions'][0]['situation']['possession']:
+                    print(f"{teams} | {ascore}-{hscore} | {status} |", end=" ")
+                    print(f"{game['competitions'][0]['situation']['downDistanceText']}, {game['competitions'][0]['competitors'][0]['team']['location']} ball")
+                elif game['competitions'][0]['competitors'][1]['id'] == game['competitions'][0]['situation']['possession']:
+                    print(f"{teams} | {ascore}-{hscore} | {status} |", end=" ")
+                    print(f"{game['competitions'][0]['situation']['downDistanceText']}, {game['competitions'][0]['competitors'][1]['team']['location']} ball")
+            except KeyError:
+                print(f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['lastPlay']['text']}") 
 
 if __name__ == '__main__':
     scoreboard()
