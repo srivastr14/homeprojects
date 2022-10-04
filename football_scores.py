@@ -2,11 +2,13 @@ import pip._vendor.requests as requests
 import json
 from datetime import datetime, time
 import time
+import os
 
 today = datetime.today().strftime('%Y%m%d')
 # today = '20221001'
 
 def scoreboard():
+    os.system("clear")
     while True:
         league = input("Which league do you want? NFL/college: ")
         if league in ['nfl', 'college']:
@@ -52,6 +54,7 @@ def scoreboard():
                 print(f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['lastPlay']['text']}") 
         print('\n')
         time.sleep(5)
+        os.system("clear")
     if choice == 'all':
         response = requests.request("GET", urlline, headers=headers)
         jsondata = json.loads(response.text)
