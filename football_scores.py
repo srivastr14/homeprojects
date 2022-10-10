@@ -45,13 +45,14 @@ def scoreboard():
                 continue
             try:
                 if game['competitions'][0]['competitors'][0]['id'] == game['competitions'][0]['situation']['possession']:
-                    print(f"{teams} | {ascore}-{hscore} | {status} |", end=" ")
-                    print(f"{game['competitions'][0]['situation']['downDistanceText']}, {game['competitions'][0]['competitors'][0]['team']['location']} ball")
+                    print(f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['downDistanceText']}, {game['competitions'][0]['competitors'][0]['team']['location']} ball")
                 elif game['competitions'][0]['competitors'][1]['id'] == game['competitions'][0]['situation']['possession']:
-                    print(f"{teams} | {ascore}-{hscore} | {status} |", end=" ")
-                    print(f"{game['competitions'][0]['situation']['downDistanceText']}, {game['competitions'][0]['competitors'][1]['team']['location']} ball")
+                    print(f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['downDistanceText']}, {game['competitions'][0]['competitors'][1]['team']['location']} ball")
             except KeyError:
-                print(f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['lastPlay']['text']}") 
+                try:
+                    print(f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['lastPlay']['text']}") 
+                except KeyError:
+                    print(f"{teams} | {ascore}-{hscore} | {status} | This game is live")
         print('\n')
         time.sleep(5)
         os.system("clear")
@@ -71,13 +72,14 @@ def scoreboard():
                 continue
             try:
                 if game['competitions'][0]['competitors'][0]['id'] == game['competitions'][0]['situation']['possession']:
-                    print(f"{teams} | {ascore}-{hscore} | {status} |", end=" ")
-                    print(f"{game['competitions'][0]['situation']['downDistanceText']}, {game['competitions'][0]['competitors'][0]['team']['location']} ball")
+                    print(f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['downDistanceText']}, {game['competitions'][0]['competitors'][0]['team']['location']} ball")
                 elif game['competitions'][0]['competitors'][1]['id'] == game['competitions'][0]['situation']['possession']:
-                    print(f"{teams} | {ascore}-{hscore} | {status} |", end=" ")
-                    print(f"{game['competitions'][0]['situation']['downDistanceText']}, {game['competitions'][0]['competitors'][1]['team']['location']} ball")
+                    print(f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['downDistanceText']}, {game['competitions'][0]['competitors'][1]['team']['location']} ball")
             except KeyError:
-                print(f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['lastPlay']['text']}") 
-
+                 # print(f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['lastPlay']['text']}") 
+                try:
+                    print(f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['lastPlay']['text']}") 
+                except KeyError:
+                    print(f"{teams} | {ascore}-{hscore} | {status} | This game is live")
 if __name__ == '__main__':
     scoreboard()
