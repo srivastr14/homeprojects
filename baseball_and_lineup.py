@@ -86,7 +86,35 @@ def scoreboard():
             #             f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['lastPlay']['text']}")
             #     except KeyError:
             #         print(f"{teams} | {ascore}-{hscore} | {status} | This game is live")
-
+        print('\n')
+        while True:
+            lineup_choice= input('Do you want a lineup? y/n: ')
+            if lineup_choice in ['y', 'n']:
+                break
+        if lineup_choice == 'y':
+            os.system("clear") 
+            for game in jsondata['events']:
+                game_id = game['id']
+                teams = game['name'] 
+                print(f'{game_id} | {teams}')
+            while True:
+                lineup_id = input("Copy/Paste the ID of the game you want: ")
+                urllineup = f'http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/summary?event={lineup_id}'
+                response_lineup = requests.request("GET", urllineup, headers=headers)
+                if response_lineup.status_code == 200:
+                    break
+            jsonlineup = json.loads(response_lineup.text)
+            for team in jsonlineup['rosters']:
+                for player in team['roster']:
+                    if player['starter'] == False:
+                        continue
+                    p_name = player['athlete']['displayName']
+                    p_position = player['position']['abbreviation']
+                    p_jersey = player['jersey']
+                    print(f'{p_jersey} | {p_name} | {p_position}')
+                print('-----------------------------')
+                
+            
 
 if __name__ == '__main__':
     scoreboard()
