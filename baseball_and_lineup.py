@@ -4,10 +4,10 @@ from datetime import datetime, time
 import time
 import os
 
-today = datetime.today().strftime('%Y-%m-%d')
+today = datetime.today().strftime('%Y%m%d')
 
 
-# today = '2022-10-01'
+# today = '20221001'
 
 def scoreboard():
     os.system("clear")
@@ -20,7 +20,7 @@ def scoreboard():
         'Upgrade-Insecure-Requests': '1',
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:105.0) Gecko/20100101 Firefox/105.0',
     }
-    urlline = 'http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard'
+    urlline = f'http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates={today}'
     while True:
         choice = input("Which games do you want? all/live: ")
         if choice in ['all', 'live']:
@@ -29,7 +29,7 @@ def scoreboard():
         response = requests.request("GET", urlline, headers=headers)
         jsondata = json.loads(response.text)
         for game in jsondata['events']:
-            teams = game['name']
+            teams = game['shortName']
             ascore = game['competitions'][0]['competitors'][1]['score']
             hscore = game['competitions'][0]['competitors'][0]['score']
             status = game['status']['type']['detail']
@@ -37,22 +37,11 @@ def scoreboard():
                 continue
             elif game['status']['type']['description'] == "Final":
                 continue
-            # try:
-            #     if game['competitions'][0]['competitors'][0]['id'] == game['competitions'][0]['situation'][
-            #         'possession']:
-            #         print(
-            #             f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['downDistanceText']}, {game['competitions'][0]['competitors'][0]['team']['location']} ball")
-            #     elif game['competitions'][0]['competitors'][1]['id'] == game['competitions'][0]['situation'][
-            #         'possession']:
-            #         print(
-            #             f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['downDistanceText']}, {game['competitions'][0]['competitors'][1]['team']['location']} ball")
-            # except KeyError:
-            #     try:
-            #         print(
-            #             f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['lastPlay']['text']}")
-            #     except KeyError:
-            #         print(f"{teams} | {ascore}-{hscore} | {status} | This game is live")
-        print('\n')
+            try:
+                print(f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['outsText']} {game['competitions'][0]['situation']['balls']}-{game['competitions'][0]['situation']['strikes']} {game['competitions'][0]['situation']['lastPlay']['text']}\n")
+            except KeyError as e:
+                print(f"{teams} | {ascore}-{hscore} | {status}")
+                print(e)
         time.sleep(5)
         os.system("clear")
     if choice == 'all':
@@ -60,32 +49,23 @@ def scoreboard():
         jsondata = json.loads(response.text)
         for game in jsondata['events']:
             game_id = game['id']
-            teams = game['name']
+            teams = game['shortName']
             ascore = game['competitions'][0]['competitors'][1]['score']
             hscore = game['competitions'][0]['competitors'][0]['score']
             status = game['status']['type']['detail']
+            # balls = game['competitions'][0]['situation']['balls']
+            # strikes = game['competitions'][0]['situation']['strikes']
             if game['status']['type']['description'] == "Scheduled":
                 print(f'{teams} | {status}')
                 continue
             elif game['status']['type']['description'] == "Final":
                 print(f'{teams} | {ascore}-{hscore} | {status}')
                 continue
-            # try:
-            #     if game['competitions'][0]['competitors'][0]['id'] == game['competitions'][0]['situation'][
-            #         'possession']:
-            #         print(
-            #             f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['downDistanceText']}, {game['competitions'][0]['competitors'][0]['team']['location']} ball")
-            #     elif game['competitions'][0]['competitors'][1]['id'] == game['competitions'][0]['situation'][
-            #         'possession']:
-            #         print(
-            #             f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['downDistanceText']}, {game['competitions'][0]['competitors'][1]['team']['location']} ball")
-            # except KeyError:
-            #     # print(f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['lastPlay']['text']}")
-            #     try:
-            #         print(
-            #             f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['situation']['lastPlay']['text']}")
-            #     except KeyError:
-            #         print(f"{teams} | {ascore}-{hscore} | {status} | This game is live")
+            
+            try:
+                print(f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['outsText']} | {game['competitions'][0]['situation']['balls']}-{game['competitions'][0]['situation']['strikes']} {game['competitions'][0]['situation']['lastPlay']['text']}")
+            except KeyError:
+                print(f"{teams} | {ascore}-{hscore} | {status}")
         print('\n')
         while True:
             lineup_choice= input('Do you want a lineup? y/n: ')
@@ -103,18 +83,46 @@ def scoreboard():
                 response_lineup = requests.request("GET", urllineup, headers=headers)
                 if response_lineup.status_code == 200:
                     break
-            jsonlineup = json.loads(response_lineup.text)
-            for team in jsonlineup['rosters']:
-                for player in team['roster']:
-                    if player['starter'] == False:
+            try:
+                os.system("clear") 
+                jsonlineup = json.loads(response_lineup.text)
+                print(f"This game is at {jsonlineup['gameInfo']['venue']['fullName']}")
+                for pitcher in jsonlineup['boxscore']['players']:
+                    if pitcher['statistics'][1]['athletes'][0]['starter']== False:
                         continue
-                    p_name = player['athlete']['displayName']
-                    p_position = player['position']['abbreviation']
-                    p_jersey = player['jersey']
-                    print(f'{p_jersey} | {p_name} | {p_position}')
-                print('-----------------------------')
+                    pitch_team = pitcher['team']['displayName']
+                    the_pitcher = pitcher['statistics'][1]['athletes'][0]['athlete']['shortName']
+                    pitch_jersey = pitcher['statistics'][1]['athletes'][0]['athlete']['jersey']
+                    pitch_ERA = pitcher['statistics'][1]['athletes'][0]['stats'][8]
+                    print(f'SP for the {pitch_team}: {pitch_jersey}| {the_pitcher} |{pitch_ERA}')
+                for team in jsonlineup['rosters']:
+                    home_away = team['homeAway'].capitalize()
+                    the_team = team['team']['displayName']
+                    print(f'\n{home_away} team: {the_team}')
+                    for player in team['roster']:
+                        if player['starter'] == False:
+                            continue
+                        p_name = player['athlete']['displayName']
+                        p_position = player['position']['abbreviation']
+                        p_jersey = player['athlete']['jersey']
+                        print(f'{p_jersey} | {p_name} | {p_position}')
+                    print('-----------------------------')
+                
+                
+            except KeyError:
+                print("The Lineup isn't ready yet.")
                 
             
 
 if __name__ == '__main__':
-    scoreboard()
+    try:
+        scoreboard()
+    except KeyError as e:
+        print(f"Looks like {e} caused an issue.")
+        while True:
+            restart_prog = input('Would you like to restart? y/n: ')
+            if restart_prog in ['y','n']:
+                break
+        if restart_prog == 'y':
+            scoreboard()
+
