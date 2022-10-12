@@ -7,7 +7,6 @@ import os
 today = datetime.today().strftime('%Y%m%d')
 
 
-# today = '20221001'
 def where_the_magic_happens(choice, jsondata):
     for game in jsondata['events']:
         teams = game['shortName']
