@@ -69,7 +69,7 @@ def scoreboard():
                 teams = game['name']
                 print(f'{game_id} | {teams}')
             while True:
-                lineup_id = input("Copy/Paste the ID of the game you want: ")
+                lineup_id = input("Copy/Paste the ID of the game you want: ").strip()
                 urllineup = f'http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/summary?event={lineup_id}'
                 response_lineup = requests.request("GET", urllineup, headers=headers)
                 if response_lineup.status_code == 200:
