@@ -31,6 +31,7 @@ def where_the_magic_happens(choice, jsondata):
             print(f"{teams} | {ascore}-{hscore} | {status}")
             print(e)
 
+
 def scoreboard():
     os.system("clear")
     headers = {
@@ -91,14 +92,13 @@ def scoreboard():
                     the_team = team['team']['displayName']
                     print(f'\n{home_away} team: {the_team}')
                     for player in team['roster']:
-                        if player['starter'] == False:
+                        if not player['starter']:
                             continue
                         p_name = player['athlete']['displayName']
                         p_position = player['position']['abbreviation']
                         p_jersey = player['jersey']
                         print(f'{p_jersey} | {p_name} | {p_position}')
                     print('-----------------------------')
-
 
             except (KeyError, IndexError) as e:
                 print(e)
