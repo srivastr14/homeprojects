@@ -95,7 +95,10 @@ def scoreboard():
                             continue
                         p_name = player['athlete']['displayName']
                         p_position = player['position']['abbreviation']
-                        p_jersey = player['jersey']
+                        try:
+                            p_jersey = player['jersey']
+                        except (KeyError,IndexError):
+                            p_jersey = player['athlete']['jersey']
                         print(f'{p_jersey} | {p_name} | {p_position}')
                     print('-----------------------------')
 
