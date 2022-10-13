@@ -64,7 +64,7 @@ if __name__ == "__main__":
         try:
             run_outfit_generator()
             break
-        except IndexError:
+        except:
             print(f"\nShit, let me retry that...")
             run_outfit_generator()
             break
