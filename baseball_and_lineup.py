@@ -7,6 +7,22 @@ import os
 today = datetime.today().strftime('%Y%m%d')
 
 
+def onBase():
+    who_list = [jsondata['events']['competitions'][0]['situation']['lastPlay']['onFirst'],
+                jsondata['events']['competitions'][0]['situation']['lastPlay']['onSecond'],
+                jsondata['events']['competitions'][0]['situation']['lastPlay']['onThird']]
+    player_list = ['Player on First', 'Player on Second', 'Player on Third']
+
+    if all(who_list):
+        return "BASES LOADED"
+    elif any(who_list):
+        base_list = [i for i, x in enumerate(who_list) if x]
+        t = [player_list[i] for i in base_list]
+        return ", ".join(t)
+    elif not any(who_list):
+        return 'No one on'
+
+
 def where_the_magic_happens(choice, jsondata):
     for game in jsondata['events']:
         teams = game['shortName']
@@ -25,7 +41,7 @@ def where_the_magic_happens(choice, jsondata):
             continue
         try:
             print(
-                f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['outsText']} {game['competitions'][0]['situation']['balls']}-{game['competitions'][0]['situation']['strikes']} {game['competitions'][0]['situation']['lastPlay']['text']}\n")
+                f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['outsText']} {game['competitions'][0]['situation']['balls']}-{game['competitions'][0]['situation']['strikes']} {game['competitions'][0]['situation']['lastPlay']['text']} | {onBase()} \n")
         except KeyError as e:
             print(f"{teams} | {ascore}-{hscore} | {status}")
             print(e)
@@ -97,7 +113,7 @@ def scoreboard():
                         p_position = player['position']['abbreviation']
                         try:
                             p_jersey = player['jersey']
-                        except (KeyError,IndexError):
+                        except (KeyError, IndexError):
                             p_jersey = player['athlete']['jersey']
                         print(f'{p_jersey} | {p_name} | {p_position}')
                     print('-----------------------------')
