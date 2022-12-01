@@ -19,7 +19,7 @@ def initializer():
         else:
             list_names += f+". "+l+", "
 
-    pc.copy(list_names)
+    pc.copy(list_names) 
 
 if __name__ == "__main__":
     initializer()
