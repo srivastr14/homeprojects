@@ -7,10 +7,10 @@ import os
 today = datetime.today().strftime('%Y%m%d')
 
 
-def onBase():
-    who_list = [jsondata['events']['competitions'][0]['situation']['lastPlay']['onFirst'],
-                jsondata['events']['competitions'][0]['situation']['lastPlay']['onSecond'],
-                jsondata['events']['competitions'][0]['situation']['lastPlay']['onThird']]
+def onBase(game):
+    who_list = [game['competitions'][0]['situation']['onFirst'],
+                game['competitions'][0]['situation']['onSecond'],
+                game['competitions'][0]['situation']['onThird']]
     player_list = ['Player on First', 'Player on Second', 'Player on Third']
 
     if all(who_list):
@@ -41,7 +41,7 @@ def where_the_magic_happens(choice, jsondata):
             continue
         try:
             print(
-                f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['outsText']} {game['competitions'][0]['situation']['balls']}-{game['competitions'][0]['situation']['strikes']} {game['competitions'][0]['situation']['lastPlay']['text']} | {onBase()} \n")
+                f"{teams} | {ascore}-{hscore} | {status} | {game['competitions'][0]['outsText']} {game['competitions'][0]['situation']['balls']}-{game['competitions'][0]['situation']['strikes']} {game['competitions'][0]['situation']['lastPlay']['text']} | {onBase(game)} \n")
         except KeyError as e:
             print(f"{teams} | {ascore}-{hscore} | {status}")
             print(e)
