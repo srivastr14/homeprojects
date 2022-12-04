@@ -12,7 +12,7 @@ bold = "\033[1m"
 for y,x in df.iterrows():
     citation = x[0]
     if x[2] and int(x[2]) > 7:
-        print(Back.GREEN + bold + str(x[2]) + Back.RESET)
+        print(Back.GREEN + bold + "JIF: " + str(x[2]) + Back.RESET)
 
 
 
