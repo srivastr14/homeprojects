@@ -1,10 +1,20 @@
 # import docx
 import pandas as pd
+import colorama
+from colorama import Fore, Back, Style
 
 df = pd.read_csv('monthly_jif.csv')
 df = df.fillna('')
+df.rename(columns={'Citation_PuSH_style___________________________________________': 'Citation'}, inplace=True)
 
-print(df)
+bold = "\033[1m"
+
+for y,x in df.iterrows():
+    citation = x[0]
+    if x[2] and int(x[2]) > 7:
+        print(Back.GREEN + bold + str(x[2]))
+
+
 
 # Concept: Take csv and make lists and then add as paragraphs (including adding "JIF: " and "Linked: ")
 # This includes highlighting "JIF: number" in Green and red text for "linked: number", bold instrument/noninstrument, and hyperlinked doi
