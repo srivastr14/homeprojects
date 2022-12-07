@@ -6,6 +6,14 @@ from docx.shared import RGBColor
 from docx.enum.text import WD_COLOR_INDEX, WD_UNDERLINE
 
 
+# Download from PuSH (Monthly Email)
+# Data>Filter for first row
+# Select "." frmo Proposals column in filter and then clear contents
+# Select all instru except blanks and paint cell then clear filters in dropdown
+# Sort JIF descending, sort instr by cell color
+# Clear formats
+# Save as monthly_jif.csv
+
 def add_hyperlink(paragraph, text, url):
     # This gets access to the document.xml.rels file and gets a new relation id value
     part = paragraph.part
