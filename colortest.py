@@ -1,4 +1,4 @@
-import colorama
+ickmport colorama
 from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
 
